@@ -19,7 +19,8 @@ var model = {
     currentAttempt: "",
 
     // a list of the words the user has previously submitted in the current game
-    wordSubmissions: []
+    wordSubmissions: [],
+
 }
 
 /*
@@ -73,23 +74,32 @@ function checkIfWordIsReal(word) {
 
     // make an AJAX call to the Pearson API
     $.ajax({
-        // TODO 13 what should the url be?
-        url: "www.todo13.com",
+        // TODO 13 (DONE) what should the url be?
+        url: "http://api.pearson.com/v2/dictionaries/lasde/entries",
+        data: {
+            headword: word
+        },
         success: function(response) {
             console.log("We received a response from Pearson!");
 
             // let's print the response to the console so we can take a looksie
-            console.log(response);
+            // console.log(response);
 
-            // TODO 14
+            // TODO 14 (DONE)
             // Replace the 'true' below.
             // If the response contains any results, then the word is legitimate.
             // Otherwise, it is not.
-            var theAnswer = true;
+            
+        if (model.wordSubmissions.length !=0){
+            model.wordSubmissions.forEach(function(element){
+                if (response.results.length > 0 && element.word === response.results[0].headword){
+                    element.isRealWord = true;
+                }
+            })
+            };
 
-            // TODO 15
+            // TODO 15 (DONE) See above
             // Update the corresponding wordSubmission in the model
-
 
             // re-render
             render();
@@ -126,9 +136,12 @@ function render() {
     // GAME -------------------------------------
 
     // clear stuff
+    $("#textbox").attr("disabled", false);
     $("#allowed-letters").empty();
     $("#word-submissions").empty();
-    // TODO 10
+    $("#textbox").removeClass(".bad-attempt");
+    $(".disallowed-letter").remove();
+    // TODO 10 (DONE)
     // Add a few things to the above code block (underneath "// clear stuff").
 
 
@@ -139,8 +152,12 @@ function render() {
     var letterChips = model.allowedLetters.map(letterChip)
     $("#allowed-letters").append(letterChips);
 
-    // TODO 11
+    // TODO 11 (DONE)
     // Render the word submissions
+    var wordChips = model.wordSubmissions.map(wordSubmissionChip);
+    $("#word-submissions").append(wordChips);
+
+
 
 
     // Set the value of the textbox
@@ -310,11 +327,17 @@ function disallowedLettersInWord(word) {
  * i.e. the word does not contain any disallowed letters
  */
 function containsOnlyAllowedLetters(word) {
-    // TODO 12
+    // TODO 12 (DONE)
     // Return the actual answer.
+    var checkVal = disallowedLettersInWord(word);
+    if (checkVal.length > 0){
+        return false;
+    }
+    else{
     return true;
-}
+    }
 
+}
 /**
  * Returns a list of 7 randomly chosen letters
  * Each letter will be distinct (no repeats of the same letter)
