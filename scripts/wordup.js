@@ -54,17 +54,15 @@ function addNewWordSubmission(word) {
     // Do we already have a wordSubmission with this word?
     // TODO 21
     // replace the hardcoded 'false' with the real answer
-    var alreadyUsed;
+    var alreadyUsed = false;
     if (model.wordSubmissions.length === 0){
         alreadyUsed = false;
     }
     else{
         model.wordSubmissions.forEach(function(element){
-            if (word != element.word){
-                alreadyUsed = false;
-            }
-            else{
+            if (word === element.word){
                 alreadyUsed = true;
+                
             }
         })
     }
@@ -415,7 +413,7 @@ function currentScore() {
             return 0;
         }
     });
-    console.log(wordScores);
+    // console.log(wordScores);
     // TODO 20 (DONE)
     // return the total sum of the word scores
     return wordScores.reduce(add, 0);
